@@ -12,7 +12,7 @@ public class NumberConverter {
         Collections.addAll(num_bank, bank);
     }
 
-    public void ConvertTo10(String num, int base) {
+    public void ConvertTo10(String num, int base, int new_base) {
         if (num.matches("[0-9]+|.+")) {
             int max = 0;
             for (int i = 0; i < num.length(); i++) if (num_bank.indexOf(""+num.charAt(i)) > max) max = num_bank.indexOf(""+num.charAt(i));
@@ -24,7 +24,7 @@ public class NumberConverter {
                 float total = 0;
                 if (count == 0) { ///no decimal component
                     for (int i = 0; i < num.length(); i++) total += (num_bank.indexOf(num.substring(num.length()-i-1,num.length()-i)) * Math.pow(base, i));
-                    System.out.println(total);
+                    convertToNewBase(total, new_base);
                 } else if (count == 1) {
                     String number = num.substring(0, num.indexOf("."));
                     String decimal = num.substring(num.indexOf(".")+1);
@@ -33,7 +33,7 @@ public class NumberConverter {
                     float total2 = 0;
                     for (int i = 0; i < decimal.length(); i++) total2 += (num_bank.indexOf(decimal.substring(decimal.length()-i-1, decimal.length()-i)) * Math.pow(base, i-1));
                     total = total1 + total2;
-                    System.out.println(total);
+                    convertToNewBase(total, new_base);
                 } else { ///Illegal expression
                     System.out.println("Expression: "+num+" contains more than one full stop.");
                 }
@@ -41,5 +41,27 @@ public class NumberConverter {
         } else {
             System.out.println("String "+num+" contains non-numbers");
         }
+    }
+
+    public void convertToNewBase(float total, int new_base) {
+        ArrayList<Double> powers = new ArrayList<>();
+        int count = 0;
+        while (Math.pow(new_base, count) < total) {
+            powers.add(Math.pow(new_base, count));
+            ++count;
+        }
+        StringBuilder ret = new StringBuilder();
+        for (int i = 0; i < powers.size(); i++) {
+            int current_total = 0;
+            int val = 0;
+            do {
+                current_total += powers.get(powers.size()-i-1);
+                ++val;
+            } while (current_total <= total);
+            val -= 1;
+            total -= powers.get(powers.size()-i-1)*val;
+            ret.append(num_bank.get(val));
+        }
+        System.out.println(ret);
     }
 }
