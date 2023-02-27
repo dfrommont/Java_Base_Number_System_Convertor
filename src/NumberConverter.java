@@ -31,6 +31,7 @@ public class NumberConverter {
                 if (count == 0) { ///no decimal component
                     for (int i = 0; i < num.length(); i++) total += (num_bank.indexOf(num.substring(num.length()-i-1,num.length()-i)) * Math.pow(base, i));
                     new_record.setNum_after(convertToNewBase(total, new_base));
+                    records.add(new_record);
                 } else if (count == 1) {
                     String number = num.substring(0, num.indexOf("."));
                     String decimal = num.substring(num.indexOf(".")+1);
@@ -74,8 +75,7 @@ public class NumberConverter {
     }
 
     public void displayRecords() {
-        System.out.println("rawr");
-        for (Record rec : records) { ///not quite right, prints nothing
+        for (Record rec : records) {
             System.out.println("Num before: "+rec.getNum_before()+" (Base: "+rec.getOld_base()+"), Num after: "+rec.getNum_after()+" (Base: "+rec.getNew_base()+").");
         }
     }
